@@ -31,6 +31,9 @@ The i18n files are outputted by default in the directory where the command is ra
 | -o | Output directory for i18n files. Remeber to quote the path if there's spaces in the path. The directory already has to exist. Default the directory when the command is ran from. |
 | --noEmpty | Ignore translations with an empty value |
 
+### Atlassian Cloud usage
+
+When using the Atlassian Cloud offering of Confluence (hosted on atlassian.net), you must provide an API token for authentication, instead of either your user's password or API token, and you must provide your email as your username. See https://developer.atlassian.com/cloud/confluence/basic-auth-for-rest-apis/ for more details.
 
 ### Using locally
 
