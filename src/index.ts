@@ -1,6 +1,7 @@
 import arg from 'arg'
 
 import {parseI18nFromConfluence} from './lib'
+import {OutputFileFormat} from 'types'
 
 const parseArgumentsIntoOptions = (rawArgs: string[]) => {
 	const args = arg(
@@ -35,7 +36,11 @@ const parseArgumentsIntoOptions = (rawArgs: string[]) => {
 		pageId: args['--pageid'],
 		username: args['--username'],
 		password: args['--password'],
-		outputFileFormat: Boolean(args['--json']) ? 'json' : Boolean(args['--typescript']) ? 'ts' : 'js',
+		outputFileFormat: Boolean(args['--json'])
+			? 'json'
+			: Boolean(args['--typescript'])
+			? 'ts'
+			: ('js' as OutputFileFormat),
 		outputDir: args['--outputdir'] || '.',
 		noEmptyValues: Boolean(args['--noEmpty']),
 	}

@@ -4,7 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import prettier from 'prettier'
 
-import {Translation, ConfluencePage} from './types'
+import {Translation, ConfluencePage, OutputFileFormat} from './types'
 
 const ATLASSIAN_CLOUD_DOMAIN = 'atlassian.net'
 
@@ -61,7 +61,7 @@ const translationsToJSFile = (translations: [string, string], noEmptyValues: boo
 
 const writeI18nFiles = (
 	json: Translation[],
-	outputFileFormat: string,
+	outputFileFormat: OutputFileFormat,
 	noEmptyValues: boolean,
 	outputDirectory: string
 ) => {
@@ -84,7 +84,7 @@ export const parseI18nFromConfluence = async (
 	pageId: string,
 	username: string,
 	password: string,
-	outputFileFormat: string,
+	outputFileFormat: OutputFileFormat,
 	noEmptyValues: boolean,
 	outputDirectiory: string
 ) => {
