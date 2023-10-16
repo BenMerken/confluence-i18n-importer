@@ -10,8 +10,6 @@ const ATLASSIAN_CLOUD_DOMAIN = 'atlassian.net'
 
 const ignoredTranslationProperties = ['TechnicalId', 'PageName', 'Image']
 
-const getFileExtension = (useTypeScript: boolean) => (useTypeScript ? 'ts' : 'js')
-
 const parseTableStringToJson = (value: string): Translation[] => htmlTableToJson.parse(value).results[0]
 
 const translationToTuple = (translation: Translation, translationKey: string) => [
@@ -42,6 +40,16 @@ const buildTranslationDictionary = (json: Translation[]) => {
 	return translationsDictionary
 }
 
+const translationsToJSONFile = (translations: [string, string], noEmptyValues: boolean) => {
+	const jsonObject: {[key: string]: string} = {}
+
+	translations
+		.filter(([_, value]) => !noEmptyValues || (noEmptyValues && value))
+		.forEach(([key, value]) => (jsonObject[key] = value))
+
+	return prettier.format(JSON.stringify(jsonObject), {parser: 'json'})
+}
+
 const translationsToJSFile = (translations: [string, string], noEmptyValues: boolean) => {
 	return prettier.format(
 		`export default {${translations
@@ -53,7 +61,7 @@ const translationsToJSFile = (translations: [string, string], noEmptyValues: boo
 
 const writeI18nFiles = (
 	json: Translation[],
-	useTypeScript: boolean,
+	outputFileFormat: string,
 	noEmptyValues: boolean,
 	outputDirectory: string
 ) => {
@@ -61,11 +69,12 @@ const writeI18nFiles = (
 
 	for (const languageEntry of translationsDictionary) {
 		const [translationLanguage, translations] = languageEntry
-		const extension = getFileExtension(useTypeScript)
 
 		fs.writeFileSync(
-			`${outputDirectory}${path.sep}${translationLanguage}.${extension}`,
-			translationsToJSFile(translations, noEmptyValues)
+			`${outputDirectory}${path.sep}${translationLanguage}.${outputFileFormat}`,
+			outputFileFormat === 'json'
+				? translationsToJSONFile(translations, noEmptyValues)
+				: translationsToJSFile(translations, noEmptyValues)
 		)
 	}
 }
@@ -75,7 +84,7 @@ export const parseI18nFromConfluence = async (
 	pageId: string,
 	username: string,
 	password: string,
-	useTypeScript: boolean,
+	outputFileFormat: string,
 	noEmptyValues: boolean,
 	outputDirectiory: string
 ) => {
@@ -95,7 +104,7 @@ export const parseI18nFromConfluence = async (
 
 		writeI18nFiles(
 			parseTableStringToJson(jsonResponse.body.storage.value),
-			useTypeScript,
+			outputFileFormat,
 			noEmptyValues,
 			outputDirectiory
 		)

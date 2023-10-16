@@ -10,6 +10,7 @@ const parseArgumentsIntoOptions = (rawArgs: string[]) => {
 			'--username': String,
 			'--password': String,
 			'--typescript': Boolean,
+			'--json': Boolean,
 			'--outputdir': String,
 			'--noEmpty': Boolean,
 			'-d': '--domain',
@@ -17,18 +18,24 @@ const parseArgumentsIntoOptions = (rawArgs: string[]) => {
 			'-u': '--username',
 			'-p': '--password',
 			'-t': '--typescript',
+			'-j': '--json',
 			'-o': '--outputdir',
 		},
 		{
 			argv: rawArgs.slice(2),
 		}
 	)
+
+	if (Boolean(args['--typescript']) && Boolean(args['--json'])) {
+		throw new Error('The flags -t and -j are mutually exclusive. Provide either one or the other, or none.')
+	}
+
 	return {
 		domain: args['--domain'],
 		pageId: args['--pageid'],
 		username: args['--username'],
 		password: args['--password'],
-		useTypeScript: Boolean(args['--typescript']),
+		outputFileFormat: Boolean(args['--json']) ? 'json' : Boolean(args['--typescript']) ? 'ts' : 'js',
 		outputDir: args['--outputdir'] || '.',
 		noEmptyValues: Boolean(args['--noEmpty']),
 	}
@@ -42,7 +49,7 @@ export const cli = (args: string[]) => {
 		options.pageId,
 		options.username,
 		options.password,
-		options.useTypeScript,
+		options.outputFileFormat,
 		options.noEmptyValues,
 		options.outputDir
 	)

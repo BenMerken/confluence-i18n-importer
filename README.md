@@ -1,7 +1,7 @@
 # confluence-i18n-importer
 
 ### Information
-CLI tool to parse a Confluence page with a table containing translations to JSON files that can be used with 
+CLI tool to parse a Confluence page with a table containing translations JavaScript, TypeScript, or JSON files that can be used with 
 [i18next](https://www.i18next.com/).
 
 A blog article explaining how and why we use this tool at AppFoundry can be found on [our blog](https://appfoundry.be/blog/automating-the-copy-experience-for-our-customers).
@@ -16,7 +16,7 @@ Install: `$ npm install -g confluence-i18n-importer`
 
 Example usage: `$ confluence-i18n-importer -d CONFLUENCE_BASE_URL -i PAGE_ID -u USERNAME -p PASSWORD  -o "/Users/john/Projects/xxxx/translations"`
 
-The i18n files are outputted by default in the directory where the command is ran from when the output flag is not given.
+The i18n files are outputted by default in the directory where the command is ran from when the output flag is not given. The default output format is JavaScript files.
 
 ### Options
 
@@ -28,8 +28,11 @@ The i18n files are outputted by default in the directory where the command is ra
 | -u | The username of the confluence account. |
 | -p | Password or API token of the confluence account. API tokens are only avaiable on cloud hosted Atlassasian stacks. |
 | -t | When this flag is given the output files will have the TypeScript (.ts) extension. |
+| -j | When this flag is given the output files will have JSON TypeScript (.json) extension. |
 | -o | Output directory for i18n files. Remeber to quote the path if there's spaces in the path. The directory already has to exist. Default the directory when the command is ran from. |
 | --noEmpty | Ignore translations with an empty value |
+
+> __WARNING:__ The flags -t and -j are mutually exclusive. If you provide both, an error will be thrown.
 
 ### Atlassian Cloud usage
 
